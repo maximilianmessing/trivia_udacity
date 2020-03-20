@@ -123,7 +123,7 @@ def create_app(test_config=None):
     def create_new_question():
         body = request.get_json()
 
-        search_term = body.get('searchTerm')
+        search_term = body.get('searchTerm', None)
         new_question = body.get('question', None)
         new_answer = body.get('answer', None)
         new_difficulty = body.get('difficulty', None)
@@ -199,6 +199,30 @@ def create_app(test_config=None):
   one question at a time is displayed, the user is allowed to answer
   and shown whether they were correct or not.
   '''
+    @app.route('/quizzes', methods=['POST'])
+    def get_quizz_question():
+        body = request.get_json()
+        quiz_category = body.get('quiz_category', None).get('id')
+        previous_questions = body.get('previous_questions', None)
+
+        if quiz_category == 0:
+            possible_questions = Question.query.filter(
+                Question.id.notin_(previous_questions))
+        else:
+            possible_questions = Question.query.filter(
+                Question.category == quiz_category).filter(Question.id.notin_(previous_questions))
+        possible_questions_ids = [x.id for x in possible_questions.all()]
+        if possible_questions_ids == []:
+            abort(404)
+
+        next_question_id = random.choice(possible_questions_ids)
+
+        next_question = Question.query.filter(
+            Question.id == next_question_id).one_or_none().format()
+        return jsonify({
+            'success': True,
+            'question': next_question
+        })
 
     '''
   @TODO: 
