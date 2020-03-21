@@ -15,7 +15,8 @@ def create_app(test_config=None):
     setup_db(app)
 
     '''
-  @TODO: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
+  @TODO: Set up CORS. Allow '*' for origins.
+  Delete the sample route after completing the TODOs
   '''
     cors = CORS(app, resources={r"*": {"origins": "*"}})
 
@@ -56,7 +57,8 @@ def create_app(test_config=None):
 
   TEST: At this point, when you start the application
   you should see questions and categories generated,
-  ten questions per page and pagination at the bottom of the screen for three pages.
+  ten questions per page and pagination at the bottom
+of the screen for three pages.
   Clicking on the page numbers should update the questions.
   '''
     def pagination_questions(selection, request):
@@ -86,7 +88,8 @@ def create_app(test_config=None):
   @TODO:
   Create an endpoint to DELETE question using a question ID.
 
-  TEST: When you click the trash icon next to a question, the question will be removed.
+  TEST: When you click the trash icon next to a question
+  the question will be removed.
   This removal will persist in the database and when you refresh the page.
   '''
 
@@ -106,7 +109,7 @@ def create_app(test_config=None):
                 'questions': current_questions,
                 'total_questions': len(Question.query.all())
             })
-        except:
+        except Exception:
             abort(422)
 
     '''
@@ -129,10 +132,12 @@ def create_app(test_config=None):
         new_difficulty = body.get('difficulty', None)
         new_category = body.get('category', None)
 
-        if search_term == None:
+        if search_term is None:
             try:
-                question = Question(question=new_question, answer=new_answer,
-                                    difficulty=new_difficulty, category=new_category)
+                question = Question(question=new_question,
+                                    answer=new_answer,
+                                    difficulty=new_difficulty,
+                                    category=new_category)
                 question.insert()
                 selection = Question.query.order_by(Question.id).all()
                 current_questions = pagination_questions(selection, request)
@@ -141,7 +146,7 @@ def create_app(test_config=None):
                     'questions': current_questions,
                     'total_questions': len(Question.query.all())
                 })
-            except:
+            except Exception:
                 abort(422)
         else:
             selection = Question.query.filter(
@@ -210,7 +215,8 @@ def create_app(test_config=None):
                 Question.id.notin_(previous_questions))
         else:
             possible_questions = Question.query.filter(
-                Question.category == quiz_category).filter(Question.id.notin_(previous_questions))
+                Question.category == quiz_category).filter(
+                Question.id.notin_(previous_questions))
         possible_questions_ids = [x.id for x in possible_questions.all()]
         if possible_questions_ids == []:
             abort(404)
@@ -225,9 +231,9 @@ def create_app(test_config=None):
         })
 
     '''
-  @TODO: 
-  Create error handlers for all expected errors 
-  including 404 and 422. 
+  @TODO:
+  Create error handlers for all expected errors
+  including 404 and 422.
   '''
     @app.errorhandler(404)
     def not_found(error):

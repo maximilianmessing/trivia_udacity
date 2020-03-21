@@ -41,7 +41,8 @@ class TriviaTestCase(unittest.TestCase):
 
     """
     TODO
-    Write at least one test for each test for successful operation and for expected errors.
+    Write at least one test for each test for successful operation
+    and for expected errors.
     """
 
     def test_get_categories(self):
@@ -139,12 +140,13 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], "Resource was not found")
 
-
-# Testing post quizzes previous question (id11) in category has to yield id 10 as current question-
+# Testing post quizzes previous question (id11) in
+# category has to yield id 10 as current question-
 
     def test_post_quizzes(self):
         res = self.client().post(
-            '/quizzes', json={"previous_questions":[11],"quiz_category":{"type":"Sports","id":"6"}})
+            '/quizzes', json={"previous_questions": [11],
+                              "quiz_category": {"type": "Sports", "id": "6"}})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -154,7 +156,8 @@ class TriviaTestCase(unittest.TestCase):
 
     def test_post_quizzes_all_category(self):
         res = self.client().post(
-            '/quizzes', json={"previous_questions":[],"quiz_category":{"type":"click","id":0}})
+            '/quizzes', json={"previous_questions": [],
+                              "quiz_category": {"type": "click", "id": 0}})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -163,7 +166,8 @@ class TriviaTestCase(unittest.TestCase):
 
     def test_post_quizzes_outofbounce_category_404(self):
         res = self.client().post(
-            '/quizzes', json={"previous_questions":[],"quiz_category":{"type":"Fantasy","id":300}})
+            '/quizzes', json={"previous_questions": [],
+                              "quiz_category": {"type": "Fantasy", "id": 300}})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
