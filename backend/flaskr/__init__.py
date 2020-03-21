@@ -261,4 +261,12 @@ def create_app(test_config=None):
             "message": "Method not found"
         }), 405
 
+    @app.errorhandler(500)
+    def not_found(error):
+        return jsonify({
+            'success': False,
+            "error": 500,
+            "message": "Internal Server error"
+        }), 500
+
     return app
